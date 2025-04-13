@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vào học</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- Navbar Styles --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0;
+        }
+
+        .profile-header {
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            background-color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .profile-header i {
+            color: #3498db;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .profile-header:hover {
+            background-color: #e0f7f5;
+            transform: translateY(-2px);
+        }
+        .profile-header:hover i {
+            color: #217dbb;
+        }
+        .profile-popup {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            border-radius: 10px;
+            min-width: 220px;
+            transform: translateY(10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .profile-popup.active {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .profile-popup ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .profile-popup li {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 500;
+            color: #555;
+        }
+        .profile-popup li:hover {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+        .profile-popup li:last-child {
+            border-bottom: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+            margin-right: 15px;
+            margin-bottom: 10px;
+            padding: 12px 18px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-align: center;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .nav-links a:hover {
+            background-color: #e0f7f5;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.15);
+        }
+        .nav-links i {
+            margin-bottom: 8px;
+            font-size: 1.8em;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover i {
+            color: #2980b9;
+        }
+        @media (min-width: 768px) {
+            .nav-links {
+                justify-content: flex-start;
+            }
+            .nav-links a {
+                flex-direction: row;
+                margin-right: 25px;
+                text-align: left;
+                align-items: center;
+            }
+            .nav-links i{
+                margin-right: 10px;
+                margin-bottom: 0;
+                font-size: 1.1em;
+            }
+        }
+
+        .container {
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        .course-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .course-card {
+            width: 100%;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+             padding: 15px; /* Reduced padding */
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .course-image-container {
+            width: 220px; /* Adjusted width */
+            height: 150px;  /* Adjusted height */
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .course-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .course-info {
+            text-align: left;
+            flex-grow: 1;
+             margin-right: 20px; /* Add some space between info and button */
+        }
+
+        .course-title {
+            font-size: 1.3em; /* Adjusted size */
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px; /* Reduced margin */
+        }
+
+        .course-description {
+            font-size: 0.9rem; /* Adjusted size */
+            color: #555;
+            line-height: 1.5; /* Adjusted line height */
+            margin-bottom: 10px;  /* Reduced margin */
+        }
+
+        .course-action {
+             width: 150px;  /* Adjusted width */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .btn-enroll {
+            background: linear-gradient(to right, #3498db, #5bc0de);
+            color: white;
+            border: none;
+            padding: 10px 20px;  /* Adjusted padding */
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem; /* Adjusted size */
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: auto;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-enroll:hover {
+            background: linear-gradient(to right, #2980b9, #34a2ba);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.15);
+        }
+
+         .master-unlock {
+             text-align: center;
+             margin-bottom: 30px;
+        }
+
+        .unlock-input {
+            padding: 8px 12px;  /* Adjusted padding */
+            border-radius: 25px;
+            border: 1px solid #dcdcdc;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            width: 250px;    /* Adjusted width */
+            margin-right: 10px;
+            font-size: 0.9rem; /* Adjusted size */
+            font-family: 'Inter', sans-serif;
+        }
+
+        .unlock-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn-unlock {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 16px; /* Adjusted padding */
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+             font-size: 0.9rem; /* Adjusted size */
+        }
+
+        .btn-unlock:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.15);
+        }
+
+        .locked {
+             opacity: 0.6;
+             pointer-events: none;
+        }
+
+         .locked .btn-enroll {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .locked .btn-enroll:hover {
+             background: #bdc3c7;
+            transform: none;
+            box-shadow: none;
+        }
+
+        h1.text-center {
+            margin-top: 70px;  /* Adjust as needed to avoid navbar overlap */
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .d-flex align-items-center {
+            display: flex;
+            align-items: center;
+        }
+
+          /* Responsive adjustments */
+         @media (max-width: 768px) {
+            .course-card {
+                 flex-direction: column; /* Stack on smaller screens */
+                 align-items: stretch; /* Make items take full width */
+                 padding: 10px;
+            }
+            .course-image-container {
+                width: 100%; /* Full width */
+                height: 180px;
+                margin-right: 0; /* Remove right margin */
+                margin-bottom: 10px; /* Add bottom margin */
+            }
+            .course-info {
+                 text-align: center; /* Center on smaller screens */
+                 margin-right: 0;
+            }
+            .course-action {
+                width: 100%; /* Full width */
+                margin-top: 10px; /* Add top margin */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <div class="nav-links">
+                <a href="vaohoc.html">
+                    <i class="fas fa-book" style="color: #3498db;"></i> <span>Vào học</span>
+                </a>
+                <a href="luyenthi.html">
+                    <i class="fas fa-pencil-alt" style="color: #e67e22;"></i> <span>Luyện thi</span>
+                </a>
+                <a href="dautruong.html">
+                    <i class="fas fa-gamepad" style="color: #9b59b6;"></i> <span>Đấu trường</span>
+                </a>
+                <a href="trangcanhan.html">
+                    <i class="fas fa-trophy" style="color: #27ae60;"></i> <span>Vào thi</span>
+                </a>
+            </div>
+             <div class="d-flex align-items-center">
+                <div class="profile-header">
+                    <i class="fa fa-user-circle me-2"></i> <span id="header-fullname"></span>
+                    <div class="profile-popup">
+                        <ul class="profile-popup-menu">
+                            <li id="info-menu">Thông tin cá nhân</li>
+                            <li id="change-password-menu">Đổi mật khẩu</li>
+                            <li id="logout-menu">Đăng xuất</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-center">Chọn Khóa Học</h1>
+
+        <div class="master-unlock">
+            <input type="text" class="unlock-input" id="master-unlock-input" placeholder="Nhập mã mở khóa" autocomplete="current-password">
+            <button class="btn-unlock" id="master-unlock-button">Mở khóa</button>
+        </div>
+
+        <div class="course-container">
+            <div class="course-card locked" data-course="1">
+                <div class="course-image-container">
+                    <img src="https://i.pinimg.com/736x/0d/b9/d6/0db9d623263671920dde07dc83eed25f.jpg" alt="Khóa học 6 tháng" class="course-image">
+                </div>
+                <div class="course-info">
+                    <h2 class="course-title">Khóa Học 6 Tháng</h2>
+                    <p class="course-description">
+                        Khóa học chuyên sâu kéo dài 6 tháng, cung cấp kiến thức nền tảng và nâng cao cho học viên.
+                    </p>
+                </div>
+                <div class="course-action">
+                    <a href="me-hocvuikhongquau.tempisite.com/vao-thi" class="btn-enroll" data-url="me-hocvuikhongquau.tempisite.com/vao-thi">Vào học</a>
+                </div>
+            </div>
+
+            <div class="course-card locked" data-course="2">
+                <div class="course-image-container">
+                    <img src="https://i.pinimg.com/736x/0d/b9/d6/0db9d623263671920dde07dc83eed25f.jpg" alt="Khóa học ôn luyện" class="course-image">
+                </div>
+                <div class="course-info">
+                    <h2 class="course-title">Khóa Học Ôn Luyện</h2>
+                    <p class="course-description">
+                        Khóa học tập trung vào ôn tập và củng cố kiến thức.
+                    </p>
+                </div>
+                <div class="course-action">
+                    <a href="#" class="btn-enroll" data-url="me-hocvuikhongquau.tempisite.com/vao-hoc">Vào học</a>
+                </div>
+            </div>
+
+            <div class="course-card locked" data-course="3">
+                <div class="course-image-container">
+                    <img src="https://i.pinimg.com/736x/0d/b9/d6/0db9d623263671920dde07dc83eed25f.jpg" alt="Khóa học giáo dục" class="course-image">
+                </div>
+                <div class="course-info">
+                    <h2 class="course-title">Khóa Học Giáo Dục</h2>
+                    <p class="course-description">
+                         Khóa học giúp học viên mở rộng kiến thức và phát triển tư duy.
+                    </p>
+                </div>
+                <div class="course-action">
+                    <a href="me-hocvuikhongquau.tempisite.com/tin tuc" class="btn-enroll" data-url="me-hocvuikhongquau.tempisite.com/tin tuc">Vào học</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const unlockCodes = {
+            "1": ["VAOHOC123", "KHTNJ"],
+            "2": ["VHL10", "KDJFGND"],
+            "3": ["KH6T"]
+        };
+
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('btn-unlock')) {
+                const masterUnlockInput = document.getElementById('master-unlock-input');
+                const enteredCode = masterUnlockInput.value.trim().toUpperCase(); // Normalize
+
+                let unlocked = false;
+                for (let courseId in unlockCodes) {
+                  if (unlockCodes[courseId].includes(enteredCode)) {
+                        const courseCard = document.querySelector(`.course-card[data-course="${courseId}"]`);
+                        if (courseCard) {
+                            courseCard.classList.remove('locked');
+                             console.log(`Unlocked course ${courseId} with code ${enteredCode}`);
+                            unlocked = true;
+
+                            // Remove this code for user cannot unlock with same code multiple times after refresh the page.
+                            unlockCodes[courseId] = unlockCodes[courseId].filter(code => code !== enteredCode);
+
+                            localStorage.setItem(`courseUnlocked_${courseId}`, "true"); // store to enable all codes after refresh the page.
+
+                        }
+                    }
+                }
+
+                if (unlocked) {
+                    masterUnlockInput.value = ''; // Clear the input
+                    masterUnlockInput.focus();
+
+                    // check unlock the whole code or not
+                     let codes = Object.entries(unlockCodes);
+
+                    for (i = 0; i <= codes.length; i++) {
+                        if (i > 0 && codes[i].length <= 0) { // If the master is 0, that means no master password to unlock the code anymore so it will enable.
+                            localStorage.setItem("allCoursesUnlocked", "true") // Enable this item to enable all and prevent show a message for other uncoding.
+                            document.getElementById('master-unlock-button').disabled = true;
+                            masterUnlockInput.disabled = true
+                            console.log("Disable the function")
+                        }
+                    }
+                }
+                else {
+                     alert('Mã không chính xác. Vui lòng thử lại.'); // In case nothing occurs, so we could know that everything fails
+                }
+            }
+
+              //Prevent enroll if it needs a passcode but not provided
+              if (event.target.classList.contains('btn-enroll')) {
+                const courseCard = event.target.closest('.course-card'); // Select the close card since some user can find the code but use to hack.
+                 if (courseCard && courseCard.classList.contains('locked') ) {
+                     event.preventDefault(); // Prevent navigation,
+                     alert("Vui lòng nhập mã mở khóa để tiếp tục.");
+                 }
+            }
+
+        });
+
+       //If user already unlock code or master passcode, then it will just do the thing on the page too.
+        document.addEventListener("DOMContentLoaded", function(event) {
+             for (let courseId in unlockCodes) {
+                 if (localStorage.getItem(`courseUnlocked_${courseId}`)) {
+                        const courseCard = document.querySelector(`.course-card[data-course="${courseId}"]`);
+                         if (courseCard) courseCard.classList.remove('locked');
+                 }
+             }
+        });
+        //Login and Security
+        const profileHeader = document.querySelector('.profile-header');
+        const profilePopup = document.querySelector('.profile-popup');
+        const infoMenu = document.getElementById('info-menu');
+        const changePasswordMenu = document.getElementById('change-password-menu');
+        const logoutMenu = document.getElementById('logout-menu');
+
+        function toggleProfilePopup() {
+            profilePopup.classList.toggle('active');
+            if(profilePopup.classList.contains('active')){
+                document.addEventListener('click',function(event){
+                    if (!profileHeader.contains(event.target)) {
+                        profilePopup.classList.remove('active');
+                        document.removeEventListener('click', arguments.callee);
+                    }
+                });
+            }
+        }
+        profileHeader.addEventListener('click', toggleProfilePopup);
+
+        // --- Login Check ---
+        const loginTime = localStorage.getItem('loginTime');
+        const currentTime = new Date().getTime();
+        if (!loginTime || (currentTime - parseInt(loginTime)) > 24 * 60 * 60 * 1000) {
+            localStorage.removeItem('user');
+            localStorage.removeItem('loginTime');
+            window.location.href = 'dangnhap.html';
+        }
+        // --- Load User Data ---
+        const storedUser = localStorage.getItem('user');
+        let user;
+        if (storedUser) {
+            user = JSON.parse(storedUser);
+        } else {
+            window.location.href = 'dangnhap.html';
+        }
+        // Hiển thị thông tin người dùng trên header
+        document.getElementById('header-fullname').textContent = user.fullname;
+
+        // Xử lý nút đăng xuất
+        logoutMenu.addEventListener('click', function () {
+            profilePopup.classList.remove('active');
+            localStorage.removeItem('user');
+            localStorage.removeItem('loginTime');
+            window.location.href = 'dangnhap.html';
+        });
+        
+        // Disable common copy/paste/cut/select-all shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Allow shortcuts within input fields and textareas
+            const targetTagName = e.target.tagName.toLowerCase();
+            if (targetTagName === 'input' || targetTagName === 'textarea') {
+                // Allow Ctrl+A inside inputs/textareas
+                if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+                     return;
+                }
+                // Allow Ctrl+C, Ctrl+V, Ctrl+X inside inputs/textareas
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'v' || e.key === 'x')) {
+                     return;
+                }
+            }
+             // Block specific combinations globally otherwise
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'a' || e.key === 'u' || e.key === 's')) {
+                 console.warn(`Blocked shortcut: ${e.key}`);
+                 e.preventDefault();
+             }
+             // Block F12 (developer tools)
+             if (e.key === 'F12') {
+                 console.warn("Blocked F12");
+                 e.preventDefault();
+             }
+        });
+    </script>
+
+</body>
+</html>
